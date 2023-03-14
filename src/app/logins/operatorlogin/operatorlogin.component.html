@@ -1,0 +1,39 @@
+<div class="container"><br>
+    <h2 style="text-align: center;">Employee Login</h2>
+    <div class="col-md-12">
+        <div class="card card-container">
+            <img id="profile-img" [src]="image" class="profile-img-card">
+            <form class="form-group" (ngSubmit)="onLogin()" #loginForm="ngForm" class="was-validated">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" [(ngModel)]="employee.email" required name="email" #emailRef="ngModel">
+                    <div *ngIf="emailRef.invalid && (emailRef.dirty || emailRef.touched)">
+                        <div *ngIf="emailRef.errors?.['required']" class="text-danger">Email is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" [(ngModel)]="employee.password" required name="password" #password="ngModel" pattern="[a-zA-Z0-9@#!%^&*]{8,}">
+                    <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                        <div *ngIf="password.errors?.['required']" class="text-danger">Password is required.</div>
+                        <div *ngIf="password.errors?.['pattern']">
+                            <pre class="text-danger">Password must contain minimum 8 characters.</pre>
+                            <pre class="text-danger">0 - 9 numbers are allowed.</pre>
+                            <pre class="text-danger">Only @ # ! % ^ & * allowed .</pre>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="loginMsg">
+                    <p class="alert alert-success">{{loginMsg}}</p>
+                </div>
+                <div *ngIf="loginError">
+                    <p class="alert alert-danger">{{loginError}}</p>
+                </div>
+                <div class="form-group">
+                    <a><input type="submit" class="btn btn-dark" value="Login" [disabled]="!loginForm.form.valid"></a> &nbsp; &nbsp; &nbsp;
+                    <a routerLink="/home"><input type="submit" class="btn btn-dark" value="Go Back"></a><br><br>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

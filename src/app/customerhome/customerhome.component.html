@@ -1,0 +1,174 @@
+<nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-brand">
+          <img src="../assets/Icon.png" heigh="20" width="30" alt="logo">
+        </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/customerhome">CustomerHome</a>
+      </li>
+    </ul>
+    <span class="navbar-nav">
+      <button class="btn btn-sm btn-outline-dark me-2" type="button">
+        <a class="nav-link logout" id="split" (click)="logout()">LogOut</a>
+      </button>
+    </span>
+  </div>
+</nav>
+
+<div *ngIf="issues.length == 0">
+  <p class="alert alert-info" style="text-align: center;">No data found on server.</p>
+</div>
+<div *ngIf="issues" class="container-fluid" issue-table>
+    <div class="headers">
+      <h2 class="table-title"><mat-icon style="margin-top: 15%;">info</mat-icon>Issues</h2>
+      <!-- Search -->
+      <div class="search">
+        <input class="search-box" type="text" name="search" [(ngModel)]="searchText" placeholder="Search...">
+      </div> 
+      <button class="btn add" (click)="newForm()">Add Issue</button>
+    </div>
+
+    <table class="table">
+      <thead class="text-center">
+        <tr>
+          <th>S.No</th>
+          <th (click)="changeSortField('issueType')">Issue Type</th>
+          <th (click)="changeSortField('issuedescription')">Details</th>
+          <th (click)="changeSortField('issueStatus')">Issue Status</th>
+          <th (click)="changeSortField('issueDate')">Date</th>
+          <th>Solution</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr *ngFor="let issue of issues | filter:searchText  | orderby:sortField; let myIndex = index">
+          <td>{{myIndex+1}}</td>
+          <td>{{issue.issueType}}</td>
+          <td>{{issue.issuedescription}}</td>
+          <td>{{issue.issueStatus}}</td>
+          <td>{{issue.issueDate}}</td>
+          <td>{{issue.solution}}</td>
+          <td><button class="btn btn-primary" [disabled]="(issue.issueStatus == 'Closed')" (click)="openForm(issue)">Edit</button></td>
+          <td><button class="btn btn-primary save" [disabled]="(issue.issueStatus == 'Closed')" (click)="revokeForm(issue)">Revoke</button></td>
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+ <!-- New Form -->
+    <div class="formwrapper" *ngIf="showForm">
+      
+      <div class="issueform">
+        <h2 class="text-center text-dark head">{{formHeader}}</h2>
+  
+        <div class="group">
+          <label for="issueType" style="margin-left: 8px;">IssueType</label>
+          <select class="form-control" [(ngModel)]="issuee.issueType" name="issueType" #typeRef="ngModel" pattern="^[A-Za-z -]+$" required>
+            <option value="Sim Card">Sim Card</option>
+            <option value="User Account">User Account</option>
+            <option value="Network">Network</option>
+            <option value="Data/Internet">Data/Internet</option>
+            <option value="My Plans">My Plans</option>
+            <option value="Recharge">Recharge</option>
+            <option value="Payment">Payment</option>
+          </select>
+          <div *ngIf="typeRef.invalid && (typeRef.dirty || typeRef.touched)">
+            <div *ngIf="typeRef.errors?.['required']" class="text text-danger">Issue type is required.</div>
+          </div>
+        </div>
+  
+        <div class="group">
+          <label for="issuedescription" style="margin-left: 10px;">Details</label>
+          <input type="text" class="form-control" [(ngModel)]="issuee.issuedescription" #descriptionRef="ngModel" name="issuedescription">
+          <div *ngIf="descriptionRef.invalid && (descriptionRef.dirty || descriptionRef.touched)">
+            <div *ngIf="descriptionRef.errors?.['required']" class="text text-danger">Description is required.</div>
+          </div>
+        </div>
+
+        <div class="group">
+          <label for="issueStatus" style="margin-left: 10px;">Status</label>
+          <select class="form-control" [(ngModel)]="issuee.issueStatus" name="issueStatus" #statusRef="ngModel" required>
+            <option value="Open">Open</option>
+          </select>
+          <div *ngIf="statusRef.invalid && (statusRef.dirty || statusRef.touched)">
+            <div *ngIf="statusRef.errors?.['required']" class="text text-danger">Issue type is required.</div>
+          </div>
+        </div>
+
+        <div class="group">
+          <label for="issueDate" style="margin-left: 8px;">Date</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="issuee.issueDate" #dateRef="ngModel" name="issueDate" >
+          <div *ngIf="dateRef.invalid && (dateRef.dirty || dateRef.touched)">
+            <div *ngIf="dateRef.errors?.['required']" class="text text-danger">Date is required.</div>
+          </div>
+        </div>
+  
+        <div class="action">
+          <button class="btn btn-primary save" (click)="saveIssue()">Save Issue</button>
+          <button class="btn btn-danger save" (click)="closeForm()">Cancel</button>
+        </div>
+  
+      </div>
+</div>
+
+
+<!-- Open Form -->
+<div class="form-wrapper" *ngIf="viewForm">
+      
+  <div class="issue-form">
+    <h2 class="text-center text-dark head">{{formsHeader}}</h2>
+
+    <div class="group">
+      <label for="issueType" style="margin-left: 8px;">IssueType</label>
+      <select class="form-control" [(ngModel)]="issueToUpdate.issueType" name="issueType" disabled>
+        
+        <option value="Sim">Sim Card</option>
+        <option value="Network">Network</option>
+        <option value="User Account">User Account</option>
+        <option value="Data/Internet">Data/Internet</option>
+        <option value="Plans">My Plans</option>
+        <option value="Recharge">Recharge</option>
+        <option value="Payment">Payment</option>
+      </select>
+    </div>
+
+    <div class="group">
+      <label for="issuedescription" style="margin-left: 10px;">Details</label>
+      <input type="text" class="form-control" [(ngModel)]="issueToUpdate.issuedescription" name="issuedescription" #descriptionRef="ngModel" required>
+      <div *ngIf="descriptionRef.invalid && (descriptionRef.dirty || descriptionRef.touched)">
+        <div *ngIf="descriptionRef.errors?.['required']" class="alert alert-danger">Description is required.</div>
+        <div *ngIf="descriptionRef.errors?.['pattern']" class="alert alert-danger">Description must contain only alphabets.</div>
+      </div>
+    </div>
+
+    <div class="action">
+      <button class="btn btn-primary " (click)="updateIssue(issueToUpdate)">Save Changes</button>
+      <button class="btn btn-danger " (click)="closeForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Revoke Form -->
+<div class="formswrapper" *ngIf="displayForm">  
+  <div class="issuesform">
+    <h2 class="text-center text-dark head">{{formssHeader}}</h2>
+    <div class="group">
+      <label for="issueStatus" style="margin-left: 10px;">Status</label>
+      <select class="form-control" [(ngModel)]="issueToUpdate.issueStatus" name="issueStatus" #statusRef="ngModel" required>
+        <option value="Closed">Close</option>
+        <option value="Open">Open</option>
+      </select>
+      <div *ngIf="statusRef.invalid && (statusRef.dirty || statusRef.touched)">
+        <div *ngIf="statusRef.errors?.['required']" class="text text-danger">Issue type is required.</div>
+      </div>
+    </div>
+    <div class="action">
+      <button class="btn btn-primary " (click)="revokeissue(issueToUpdate)">Revoke</button>
+      <button class="btn btn-danger " (click)="closeForm()">Cancel</button>
+    </div>
+  </div>
+</div>

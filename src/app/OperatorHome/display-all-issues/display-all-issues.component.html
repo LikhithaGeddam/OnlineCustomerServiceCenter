@@ -1,0 +1,122 @@
+<nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-brand">
+            <img src="../assets/Icon.png" heigh="20" width="30" alt="logo">
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/allIssues">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/pendingIssues">Pending Issues</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" routerLink="/closedIssues">Closed Issues</a>
+        </li>
+        
+      </ul>
+      <span class="navbar-nav">
+        <button class="btn btn-sm btn-outline-dark me-2" type="button">
+          <a class="nav-link logout" id="split" routerLink="" (click)="logout()"  >LogOut</a>
+        </button>
+      </span>
+    </div>
+</nav>
+
+<div *ngIf="issues.length == 0">
+    <p class="alert alert-info" style="text-align: center;">No data found on server.</p>
+</div>
+
+<div *ngIf="issues.length > 0">
+    <h1 style="text-align: center">List of all Issues</h1>
+    <!-- <h1 style="text-align: center; font-family:verdana">List of all Issues</h1> -->
+    <div class="search">
+        <input class="search-box" type="text" name="search" [(ngModel)]="searchText" placeholder="Search...">
+    </div><br>
+    <div class="container-fluid">
+        <table class="table">
+            <tr>
+                <th (click)="changeSortField('issueId')"> Issue Id</th>
+                <th (click)="changeSortField('issueType')"> Issue Type</th>
+                <th (click)="changeSortField('issuedescription')"> Issue Description</th>
+                <th (click)="changeSortField('issueStatus')"> Issue Status</th>
+                <th (click)="changeSortField('issueDate')"> Issue Date</th>
+                <th>Solution</th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let issue of issues | filter:searchText | orderby:sortField">
+                <td>{{issue.issueId}}</td>
+                <td>{{issue.issueType}}</td>
+                <td>{{issue.issuedescription}}</td>
+                <td>{{issue.issueStatus}}</td>
+                <td>{{issue.issueDate}}</td>
+                <td>{{issue.solution}}</td>
+                <button type="button" class="btn btn-primary"[disabled]="(issue.issueStatus == 'Closed' && issue.solution != null)" (click)="openPopup(issue)">Attend</button>
+            </tr>
+        </table>
+    </div>
+</div>
+<!-- UpdateForm -->
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container center">
+
+                    <h1 style="text-align: center">Resolve Issue</h1>
+                    <form #updateIssueFrom="ngForm" class="form-group" (ngSubmit)="closePopup(issueUpdate)">
+                        <label for="issueId">Issue Id:</label>
+
+                        <input type="number" id="issueId" name="issueId" class="form-control"
+                            [(ngModel)]="issueUpdate.issueId" #idRef="ngModel" pattern="[0-9]{1,}" required disabled>
+                        <div *ngIf="idRef.invalid && (idRef.dirty || idRef.touched)">
+
+                            <div *ngIf="idRef.errors?.['required']" class="alert alert-danger">Id is required.</div>
+
+                            <div *ngIf="idRef.errors?.['pattern']" class="alert alert-danger">Id must contain only
+                                numbers.</div>
+                        </div>
+
+                        <label for="issueType">Issue Type:</label>
+                        <input type="text" id="issueType" name="issueType" class="form-control"
+                            [(ngModel)]="issueUpdate.issueType" #typeRef="ngModel" pattern="^[A-Za-z -]+$" required>
+                        <div *ngIf="typeRef.invalid && (typeRef.dirty || typeRef.touched)">
+
+                            <div *ngIf="typeRef.errors?.['required']" class="alert alert-danger">Issue type is required.
+                            </div>
+                            <div *ngIf="typeRef.errors?.['pattern']" class="alert alert-danger">Type must contain only
+                                alphabets.</div>
+                        </div>
+                        <label for="issueDes">Issue Description:</label>
+                        <input type="text" id="issueDes" name="issueDes" class="form-control"
+                            [(ngModel)]="issueUpdate.issuedescription" #DesRef="ngModel" required disabled>
+                        <div *ngIf="DesRef.invalid && (DesRef.dirty || DesRef.touched)">
+                            <div *ngIf="DesRef.errors?.['required']" class="alert alert-danger">Description is required.</div>        
+                        </div>
+                        <label for="status">Issue Status:</label>
+                        <select class="form-control" [(ngModel)]="issueUpdate.issueStatus" id="status" name="status">
+                            <option value="Open">Open</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+
+                        <label for="solution">Provide Solution:</label>
+                        <input type="text" id="solution" name="solution" class="form-control"
+                            [(ngModel)]="issueUpdate.solution" #solRef="ngModel" pattern="[a-zA-Z]{10,}" required>
+                        <div *ngIf="solRef.invalid && (solRef.dirty || solRef.touched)">
+                            <div *ngIf="solRef.errors?.['required']" class="alert alert-danger">Solution is required.</div>
+                        </div><br>
+                        <div>
+                            <div>
+                                <button type="button" class="btn btn-primary"
+                                    (click)="closePopup(issueUpdate)">Upload</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

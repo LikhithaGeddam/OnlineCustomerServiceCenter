@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-brand">
+            <img src="../assets/Icon.png" heigh="20" width="30" alt="logo">
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/allIssues">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/pendingIssues">Pending Issues</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" routerLink="/closedIssues">Closed Issues</a>
+        </li>
+      </ul>
+      <span class="navbar-nav">
+        <button class="btn btn-sm btn-outline-dark me-2" type="button">
+          <a class="nav-link logout" id="split" (click)="logout()">LogOut</a>
+        </button>
+      </span>
+    </div>
+</nav>
+
+<div *ngIf="issues.length == 0">
+    <p class="alert alert-info" style="text-align: center;">No Pending Issues Found.</p>
+</div>
+<div *ngIf="issues.length > 0">
+    <h1 style="text-align: center">List of pending issues</h1>
+    <div class="container-fluid">
+
+        <table class="table">
+            <tr>
+                <th> Issue Id</th>
+                <th> Issue Type</th>
+                <th> Issue Description</th>
+                <th> Issue Status</th>
+                <th> Issue Date</th>
+                <th> Issue Solution</th>
+
+            </tr>
+            <tr *ngFor="let issue of issues">
+                <td>{{issue.issueId}}</td>
+                <td>{{issue.issueType}}</td>
+                <td>{{issue.issuedescription}}</td>
+                <td>{{issue.issueStatus}}</td>
+                <td>{{issue.issueDate}}</td>
+                <td>{{issue.solution}}</td>
+        
+            </tr>
+        </table>
+    </div>
+</div>

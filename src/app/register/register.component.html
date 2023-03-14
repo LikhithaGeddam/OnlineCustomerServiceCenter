@@ -1,0 +1,130 @@
+<section class="vh-200 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+        <div class="container py-5 h-100">
+            <div class="row justify-content-center align-items-center h-100">
+                <div class="col-12 col-lg-9 col-xl-7">
+                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="container center">
+                                <h1 class="fw-normal mb-3 pb-3 text-center mb-5" style="letter-spacing: 1px;">Create An Account</h1>
+                                <form class="form-group" #RegistrationForm="ngForm" (ngSubmit)="onSubmit()">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline mb-4">
+                                                <input type="text" class="form-control form-control-lg" placeholder="First Name" 
+                                                id="firstName" name="fname" [(ngModel)]="customer.firstName" #fname="ngModel" 
+                                                required  pattern="[a-zA-Z]{3,}">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="fname.invalid &&(fname.dirty||fname.touched)">
+                                            <div *ngIf="fname.errors?.['required']" class="alert alert-danger">
+                                                First Name is Required
+                                            </div>
+                                            <div *ngIf="fname.errors?.['pattern']" class="alert alert-danger">
+                                                It can only contains alphabets and min length is 3 
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline mb-4">
+                                                <input type="text" class="form-control form-control-lg" placeholder="Last Name" 
+                                                id="lastname" name="lname" [(ngModel)]="customer.lastName" #lname="ngModel" 
+                                                required pattern="[a-zA-Z]{3,}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="lname.invalid &&(lname.dirty||lname.touched)">
+                                        <div *ngIf="lname.errors?.['required']" class="alert alert-danger">
+                                            Last Name is Required
+                                        </div>
+                                        <div *ngIf="lname.errors?.['pattern']" class="alert alert-danger">
+                                            It can only contains alphabets and min length is 3
+                                        </div>
+                                    </div>
+                                    <div class="form-outline mb-4">
+                                        <input type="email" class="form-control form-control-lg" placeholder="Email Adresss" 
+                                        id="email" name="email" [(ngModel)]="customer.email" #emailRef="ngModel" required email>
+                                    </div>
+                                    <div *ngIf="emailRef.invalid &&(emailRef.dirty||emailRef.touched)">
+                                        <div *ngIf="emailRef.errors?.['required']" class="alert alert-danger"> 
+                                            Email is Required
+                                        </div>
+                                        <div *ngIf="emailRef.errors?.['email']">
+                                            <p class="alert alert-danger">Enter valid email e.g : info@gmail.com</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline mb-4">
+                                                <input type="password" class="form-control form-control-lg" placeholder="Password" 
+                                                id="pwd" name="password" [(ngModel)]="customer.password" #passwordRef="ngModel" 
+                                                required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="passwordRef.invalid && (passwordRef.dirty|| passwordRef.touched)">
+                                            <div *ngIf="passwordRef.errors?.['required']" RegistrationForm.form.invalid class="alert alert-danger">
+                                                Password is Required
+                                            </div>
+                                            <div *ngIf="passwordRef.errors?.['pattern']" class="alert alert-danger"> 
+                                                Password must contain more than 8 characters, 1 upper case letter, 1 lower case letter, and 1 special character
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline mb-4">
+                                                <input type="password" class="form-control form-control-lg" placeholder="Confirm Password" 
+                                                id="pwdConfirm" name="confirmPassword" [(ngModel)]="confirmPassword" #passwordRef="ngModel" 
+                                                required> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="passwordRef.invalid && (passwordRef.dirty|| passwordRef.touched)">
+                                        <div *ngIf="passwordRef.errors?.['required']" class="alert alert-danger "> 
+                                            Password is Required 
+                                        </div>
+                                    </div>
+                                    <div *ngIf="customer.password!=confirmPassword" class="alert alert-danger">
+                                        Password Mismatch
+                                    </div>
+                                    <div class="form-outline mb-4"> <input type="text" class="form-control form-control-lg" 
+                                        placeholder="Mobile Number" id="mobileNumber" name="mobileNumber" 
+                                        [(ngModel)]="customer.mobileNumber" #mobile="ngModel" required pattern="^[6-9][0-9]{9}">
+                                    </div>
+                                    <div *ngIf="mobile.invalid &&(mobile.dirty||mobile.touched)">
+                                        <div *ngIf="mobile.errors?.['required']" class="alert alert-danger"> 
+                                            Mobile Number is Required 
+                                        </div>
+                                        <div *ngIf="mobile.errors?.['pattern']" class="alert alert-danger"> 
+                                            Mobile Number can start only with 6-9 and it should have 10 digits 
+                                        </div>
+                                    </div> 
+                                    <div class="form-outline mb-4">
+                                        <input type="text" class="form-control form-control-lg" placeholder="City" 
+                                        id="city" name="city" [(ngModel)]="customer.city" #city="ngModel" 
+                                        required pattern="[a-zA-Z ]{3,}"> 
+                                        <div *ngIf="city.invalid &&(city.dirty||city.touched)">
+                                        <div *ngIf="city.errors?.['required']" class="alert alert-danger"> 
+                                            City name is Required
+                                        </div>
+                                        <div *ngIf="city.errors?.['pattern']" class="alert alert-danger">
+                                            It can only contains alphabets and min length is 3
+                                        </div>
+                                    </div><br>
+                                    <div class="d-flex justify-content-center">
+                                        <input type="submit" value="Register" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" 
+                                        [disabled]="RegistrationForm.form.invalid || (customer.password!=confirmPassword)">
+                                    </div><br><br>
+                                    <div *ngIf="msg">
+                                        <p class="btn btn-success">{{msg}}</p><br>
+                                        <a class="mb-5 pb-lg-2" style="color: #393f81;" routerLink="../login">Click here to Login</a>
+                                    </div>
+                                    <div *ngIf="errorMsg">
+                                        <p class="alert alert-danger">{{errorMsg}}</p>
+                                    </div>
+                                <!-- </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->

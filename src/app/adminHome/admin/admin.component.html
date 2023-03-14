@@ -1,0 +1,113 @@
+<nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/operators">Operators</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/departments">Department</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" routerLink="/admins">Admin</a>
+        </li>
+      </ul>
+      <span class="navbar-nav">
+        <button class="btn btn-sm btn-outline-dark me-2" type="button">
+          <a class="nav-link logout" id="split" (click)="logout()">LogOut</a>
+        </button>
+      </span>
+    </div>
+</nav>
+
+  <div *ngIf="admins.length == 0">
+    <p class="alert alert-info">No data found on server.</p>
+  </div>
+
+<div *ngIf="admins" class="container-fluid" department-table>
+    <div class="headers">
+      <h2 class="table-title"><mat-icon style="margin-top: 15%;">person</mat-icon>Admin</h2>
+      <!-- Search -->
+      <div class="search">
+        <input class="search-box" type="text" name="search" [(ngModel)]="searchText" placeholder="Search...">
+      </div> 
+      <button class="btn add" (click)="newDialog()">Add Admin</button>
+    </div>
+    <table class="table">
+        <thead class="text-center">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr *ngFor="let admin of admins | filter:searchText">
+            <td>{{admin.name}}</td>
+            <td>{{admin.email}}</td>
+            <td>{{admin.password}}</td>
+            <td><button class="btn btn-primary" (click)="openForm(admin)">Edit</button></td>
+          </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- New Form -->
+<div class="formwrapper" *ngIf="showForm">   
+
+    <div class="adminform">
+        <h2 class="text-center text-dark head">{{formHeader}}</h2>
+
+        <div class="group">
+            <label for="name" style="margin-left: 10px;">Name</label>
+            <input type="text" style="margin-left: 8px;" class="form-control" [(ngModel)]="adminn.name" name="name" required>
+        </div>
+        <div class="group">
+            <label for="email" style="margin-left: 10px;">Email</label>
+            <input type="email" style="margin-left: 8px;" class="form-control" [(ngModel)]="adminn.email" name="email" #emailRef="ngModel" email required>
+            <div *ngIf="emailRef.invalid && (emailRef.dirty || emailRef.touched)">
+              <div *ngIf="emailRef.errors?.['required']" class="text text-danger">Email is required.</div>
+              <div *ngIf="emailRef.errors?.['email']" class="text text-danger">Enter valid Email.</div>
+            </div>
+        </div>
+        <div class="group">
+          <label for="password" style="margin-left: 10px;">Password</label>
+          <input type="password" style="margin-left: 8px;" class="form-control" [(ngModel)]="adminn.password" name="password" #passwordRef="ngModel" pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$" required>
+          <div *ngIf="passwordRef.invalid && (passwordRef.dirty || passwordRef.touched)">
+            <div *ngIf="passwordRef.errors?.['required']" class="text text-danger">Password is required.</div>
+            <div *ngIf="passwordRef.errors?.['pattern']" class="text text-danger">Wrong Password.</div>
+          </div>
+        </div>
+        
+        <div class="action">
+            <button class="btn btn-primary save" (click)="saveAdmin()">Save Admin</button>
+            <button class="btn btn-danger save" (click)="closeForm()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Open Form -->
+<div class="formwrapper" *ngIf="viewForm">   
+
+    <div class="admin-form">
+        <h2 class="text-center text-dark head">{{formsHeader}}</h2>
+        
+        <div class="group">
+            <label for="name" style="margin-left: 10px;">Name</label>
+            <input type="text" style="margin-left: 8px;" class="form-control" [(ngModel)]="adminToUpdate.name" name="name" required>
+        </div>
+        <div class="group">
+            <label for="email" style="margin-left: 10px;">Email</label>
+            <input type="email" style="margin-left: 8px;" class="form-control" [(ngModel)]="adminToUpdate.email" #emailRef="ngModel" name="email" email required>
+            <div *ngIf="emailRef.invalid && (emailRef.dirty || emailRef.touched)">
+              <div *ngIf="emailRef.errors?.['required']" class="text text-danger">Email is required.</div>
+              <div *ngIf="emailRef.errors?.['email']" class="text text-danger">Enter valid Email.</div>
+            </div>
+          </div>
+        
+        <div class="action">
+            <button class="btn btn-primary save" (click)="updateAdmin(adminToUpdate)">Save Changes</button>
+            <button class="btn btn-danger save" (click)="closeForm()">Cancel</button>
+        </div>
+    </div>
+</div>
